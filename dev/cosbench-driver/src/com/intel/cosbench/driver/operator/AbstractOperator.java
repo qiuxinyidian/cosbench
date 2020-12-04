@@ -138,7 +138,10 @@ abstract class AbstractOperator implements Operator {
     public static void isUnauthorizedException(Exception e, Session session) {
         if(e != null && e.getMessage() != null)
             try{
-                if(401 == Integer.valueOf(e.getMessage().substring(9, 12))){
+		       String msg = e.getMessage();
+		       if (msg.length() < 12) {
+                    LOGGER.error("catch error from storage backend: " + msg);
+		       } else if(401 == Integer.valueOf(e.getMessage().substring(9, 12))){
                     session.getApi().setAuthFlag(false);
                     LOGGER.debug("catch 401 error from storage backend, set auth flag to false");
                 }
